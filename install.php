@@ -70,7 +70,7 @@ class com_shopInstallerScript
 	 * UNINSTALL
 	 */
 	function uninstall( $parent ) {
-		if(!isset($this->release)) $this->release = '1.0.1';
+		if(!isset($this->release)) $this->release = '0.0.1';
 		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_UNINSTALL', $this->release) . '</p>';
 	}
  
