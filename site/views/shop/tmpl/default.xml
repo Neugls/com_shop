@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_SHOP_LAYOUT_DEFAULT">
+		<message>COM_SHOP_LAYOUT_DEFAULT_MSG</message>
+	</layout>
+	<fields name="request">
+		<fieldset name="request">
+			<field name="id" label="COM_SHOP_REQUEST_ID_LABEL" description="COM_SHOP_REQUEST_ID_DESC" type="sql" query="SELECT `shop_id`, `shop_name` FROM `#__shop` ORDER BY `ordering`" key_field="shop_id" value_field="shop_name" />
+		</fieldset>
+	</fields>
+</metadata>
