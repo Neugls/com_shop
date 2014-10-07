@@ -12,6 +12,14 @@ class TableCustomers extends JTable
 	var $customer_last		= null;
 	/** @var string Session ID */
 	var $customer_session	= null;
+	/** @var int */
+	var $checked_out		= null;
+	/** @var time */
+	var $checked_out_time	= null;
+	/** @var datetime */
+	var $created				= null;
+	/** @var int */
+	var $created_by				= null;
 	/** @var string JSON data */
 	var $params				= null;
 	/** @var int User ID */

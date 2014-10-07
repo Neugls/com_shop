@@ -12,6 +12,10 @@ class TableCarts extends JTable
 	var $cart_status		= null;
 	/** @var datetime Order Date */
 	var $cart_checkout		= null;
+	/** @var int */
+	var $checked_out			= null;
+	/** @var datetime */
+	var $checked_out_time		= null;
 	/** @var datetime Date Modified */
 	var $modified			= null;
 	/** @var int User ID */
