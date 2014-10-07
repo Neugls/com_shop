@@ -12,7 +12,7 @@
 			<field name="product_price" type="text" class="validate-float" filter="float" required="true" label="COM_SHOP_PRODUCT_PRICE_LABEL" description="COM_SHOP_PRODUCT_PRICE_DESC" />
 		</fieldset>
 		<fieldset name="editor">
-			<field name="product_description" type="editor" filter="safehtml" label="COM_SHOP_SHOP_DESCRIPTION_LABEL" description="COM_SHOP_SHOP_DESCRIPTION_DESC" />
+			<field name="product_description" type="editor" filter="safehtml" label="COM_SHOP_PRODUCT_DESCRIPTION_LABEL" description="COM_SHOP_PRODUCT_DESCRIPTION_DESC" />
 		</fieldset>
 		<fieldset name="options">
 			<field name="state" type="radio" filter="uint" class="radio btn-group validate-uint" required="true" default="1" label="COM_SHOP_PUBLISHED_LABEL" description="COM_SHOP_PUBLISHED_DESC">
@@ -20,7 +20,7 @@
 				<option value="0">COM_SHOP_BOOLEAN_FALSE</option>
 			</field>
 			<field name="publish_up" type="calendar" format="%Y-%m-%d %H:%M:%S" filter="user_utc" default="0000-00-00 00:00:00" label="COM_SHOP_PUBLISH_UP_LABEL" description="COM_SHOP_PUBLISH_UP_DESC" />
-			<field name="publish_down" type="calendar" format="%Y-%m-%d %H:%M:%S" filter="user_utc" default="0000-00-00 00:00:00" label="COM_SHOP_PUBLISH_UP_LABEL" description="COM_SHOP_PUBLISH_UP_DESC" />
+			<field name="publish_down" type="calendar" format="%Y-%m-%d %H:%M:%S" filter="user_utc" default="0000-00-00 00:00:00" label="COM_SHOP_PUBLISH_DOWN_LABEL" description="COM_SHOP_PUBLISH_DOWN_DESC" />
 			<field name="access" type="accesslevel" filter="uint" class="validate-uint" required="true" default="1" label="COM_SHOP_ACCESS_LABEL" description="COM_SHOP_ACCESS_DESC" />
 		</fieldset>
 		<fieldset name="metadata">
