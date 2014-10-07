@@ -62,52 +62,79 @@
 	<input type="hidden" name="chosen" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="hidemainmenu" value="0" />
-	<input type="hidden" name="shop_id" value="<?php echo $this->form->getValue('shop_id'); ?>" />
-	<?php echo JHTML::_('form.token')."\n"; ?>
+	<input type="hidden" name="product_id" value="<?php echo $this->form->getValue('product_id'); ?>" />
+	<?php echo JHtml::_('form.token')."\n"; ?>
 	<div id="editcell">
-		<div class="span9 pull-left">
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_SHOP_FORM_LEGEND_BASIC'); ?></legend>
-				<?php foreach($this->form->getFieldset('base') as $field){ ?>
-					<div class="control-group">
-						<?php echo $field->label; ?>
-						<div class="controls"><?php echo $field->input; ?></div>
-					</div>
-				<?php } ?>
-				<div class="clr"></div>
+	    <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'base')); ?>
+	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'base', JText::_('COM_SHOP_FORM_LEGEND_BASIC', true)); ?>
+	    <div class="row-fluid">
+            <div class="span3">
+                <fieldset class="adminform">
+                    <?php foreach($this->form->getFieldset('base') as $field){ ?>
+                        <div class="control-group">
+                            <?php echo $field->label; ?>
+                            <div class="controls"><?php echo $field->input; ?></div>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+            </div>
+            <div class="span3">
+                <fieldset class="adminform">
+                    <?php foreach($this->form->getFieldset('options') as $field){ ?>
+                        <div class="control-group">
+                            <?php echo $field->label; ?>
+                            <div class="controls"><?php echo $field->input; ?></div>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+            </div>
+            <div class="span3">
+                <fieldset class="adminform">
+                    <?php foreach($this->form->getFieldset('params') as $field){ ?>
+                        <div class="control-group">
+                            <?php echo $field->label; ?>
+                            <div class="controls"><?php echo $field->input; ?></div>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+            </div>
+            <div class="span3">
+                <fieldset class="adminform">
+                    <?php foreach($this->form->getFieldset('metadata') as $field){ ?>
+                        <div class="control-group">
+                            <?php echo $field->label; ?>
+                            <div class="controls"><?php echo $field->input; ?></div>
+                        </div>
+                    <?php } ?>
+                </fieldset>
+            </div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'description', JText::_('COM_SHOP_FORM_LEGEND_HTML', true)); ?>
+		<div class="row-fluid">
+		    <div class="span12">
 				<?php echo $this->form->getLabel('product_description'); ?>
 				<div class="clr"></div>
 				<?php echo $this->form->getInput('product_description'); ?>
-			</fieldset>
+		    </div>
 		</div>
-		<div class="span3 pull-left">
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_SHOP_FORM_LEGEND_OPTIONS'); ?></legend>
-				<?php foreach($this->form->getFieldset('options') as $field){ ?>
-					<div class="control-group">
-						<?php echo $field->label; ?>
-						<div class="controls"><?php echo $field->input; ?></div>
-					</div>
-				<?php } ?>
-			</fieldset>
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_SHOP_FORM_LEGEND_PARAMS'); ?></legend>
-				<?php foreach($this->form->getFieldset('params') as $field){ ?>
-					<div class="control-group">
-						<?php echo $field->label; ?>
-						<div class="controls"><?php echo $field->input; ?></div>
-					</div>
-				<?php } ?>
-			</fieldset>
-			<fieldset class="adminform">
-				<legend><?php echo JText::_('COM_SHOP_FORM_LEGEND_METADATA'); ?></legend>
-				<?php foreach($this->form->getFieldset('metadata') as $field){ ?>
-					<div class="control-group">
-						<?php echo $field->label; ?>
-						<div class="controls"><?php echo $field->input; ?></div>
-					</div>
-				<?php } ?>
-			</fieldset>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'images', JText::_('COM_SHOP_FORM_LEGEND_IMAGES', true)); ?>
+		<div class="row-fluid">
+		    <div class="span4">
+		    </div>
+		    <div class="span8">
+		        <table class="table">
+		        </table>
+		    </div>
 		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('COM_SHOP_FORM_LEGEND_OPTIONS', true)); ?>
+		<div class="row-fluid">
+		    <div class="span12">
+		    </div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	</div>
 </form>
