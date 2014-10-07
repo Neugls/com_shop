@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields>
+		<fieldset name="hidden">
+			<field name="image_id" type="hidden" filter="uint" />
+			<field name="product_id" type="hidden" filter="uint" />
+			<field name="ordering" type="hidden" filter="uint" />
+		</fieldset>
+		<fieldset name="base">
+			<field name="image_source" type="text" filter="string" required="true" label="COM_SHOP_IMAGE_SOURCE_LABEL" description="COM_SHOP_IMAGE_SOURCE_DESC" />
+			<field name="image_full" type="text" filter="string" required="true" label="COM_SHOP_IMAGE_FULL_LABEL" description="COM_SHOP_IMAGE_FULL_DESC" />
+			<field name="image_thumbnail" type="text" filter="string" required="true" label="COM_SHOP_IMAGE_THUMBNAIL_LABEL" description="COM_SHOP_IMAGE_THUMBNAIL_DESC" />
+			<field name="image_alt" type="text" filter="string" required="true" label="COM_SHOP_IMAGE_ALT_LABEL" description="COM_SHOP_IMAGE_ALT_DESC" />
+			<field name="image_title" type="text" filter="string" label="COM_SHOP_IMAGE_TITLE_LABEL" description="COM_SHOP_IMAGE_TITLE_DESC" />
+		</fieldset>
+	</fields>
+</form>

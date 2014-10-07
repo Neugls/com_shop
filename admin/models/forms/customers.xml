@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields>
+		<fieldset name="hidden">
+			<field name="customer_id" type="hidden" filter="uint" />
+			<field name="customer_session" type="hidden" filter="cmd" />
+		</fieldset>
+		<fieldset name="base">
+			<field name="customer_first" type="text" class="validate-string" filter="string" required="true" label="COM_SHOP_CUSTOMER_FIRST_LABEL" description="COM_SHOP_CUSTOMER_FIRST_DESC" />
+			<field name="customer_last" type="text" class="validate-string" filter="string" required="true" label="COM_SHOP_CUSTOMER_LAST_LABEL" description="COM_SHOP_CUSTOMER_LAST_DESC" />
+		</fieldset>
+		<fieldset name="options">
+			<field name="published" type="radio" filter="uint" class="radio btn-group validate-uint" required="true" default="1" label="COM_SHOP_PUBLISHED_LABEL" description="COM_SHOP_PUBLISHED_DESC">
+				<option value="1">COM_SHOP_BOOLEAN_TRUE</option>
+				<option value="0">COM_SHOP_BOOLEAN_FALSE</option>
+			</field>
+			<field name="access" type="accesslevel" filter="uint" class="validate-uint" required="true" default="1" label="COM_SHOP_ACCESS_LABEL" description="COM_SHOP_ACCESS_DESC" />
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="params">
+		</fieldset>
+	</fields>
+</form>

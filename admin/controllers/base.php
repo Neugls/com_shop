@@ -26,9 +26,7 @@ class ShopControllerBase extends JControllerForm
 	 */
 	public function __construct($config = array())
 	{
-		$this->view_item = 'shop';
-		$this->view_list = 'shop';
-		parent::__construct();
+		parent::__construct($config);
 		// REGISTER CUSTOM TASKS
 		$this->registerTask('unpublish', 'publish');
 		$this->registerTask('archive', 'publish');

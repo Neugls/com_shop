@@ -1,9 +1,11 @@
 <?php
 /**
- * Shop Default Admin Model
+ * Shop Products Admin Model
  * 
  * @package		Shop
- * @subpackage	Component
+ * @subpackage	Components
+ *
+ * @copyright	Copyright (C) 2007 - 2014 Subtext Productions. All rights reserved.
  * @license		GNU/GPL
  */
 
@@ -12,7 +14,7 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.modeladmin' );
 
-class ShopModelShop extends JModelAdmin
+class ShopModelProducts extends JModelAdmin
 {
     /**
      * Database records data
@@ -78,10 +80,10 @@ class ShopModelShop extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		if($form = $this->loadForm('com_shop.shop', 'shop', array('control'=>'jform', 'load_data'=>$loadData))){
+		if($form = $this->loadForm('com_shop.products', 'products', array('control'=>'jform', 'load_data'=>$loadData))){
 			return $form;
 		}
-		JError::raiseError(0, JText::sprintf('JLIB_FORM_INVALID_FORM_OBJECT', 'shop'));
+		JError::raiseError(0, JText::sprintf('JLIB_FORM_INVALID_FORM_OBJECT', 'products'));
 		return null;
 	}
 
@@ -124,9 +126,10 @@ class ShopModelShop extends JModelAdmin
 		$option		= $mainframe->input->get('option', 'com_shop');
     	$scope		= $this->getName();
     	$row		= $this->getTable();
+    	$sql		= $this->_db->getQuery(true);
     	$filter		= array();
     	if($search = addslashes($mainframe->getUserState($option.'.'.$scope.'.filter_search'))){
-    		$filter[] = "`shop_name` LIKE '%{$search}%'";
+    		$filter[] = "`product_name` LIKE '%{$search}%'";
     	}
     	if(!$ordering = $mainframe->getUserState($option.'.'.$scope.'.filter_order')){
     		$ordering = "`ordering`";
@@ -134,14 +137,12 @@ class ShopModelShop extends JModelAdmin
     	if(!$order_dir = $mainframe->getUserState($option.'.'.$scope.'.filter_order_Dir')){
     		$order_dir = "ASC";
     	}
-		$sql = "SELECT SQL_CALC_FOUND_ROWS s.*, v.title AS `access`, u.`name` AS `editor` ".
-		"FROM `{$row->getTableName()}` s ".
-		"LEFT JOIN `#__viewlevels` v ON s.`access` = v.`id` ".
-		"LEFT JOIN `#__users` u ON s.`checked_out` = u.`id`";
-		if(count($filter)){
-			$sql .= " WHERE " . implode(" AND ", $filter);
+    	$sql->select("SQL_CALC_FOUND_ROWS p.*");
+    	$sql->from("`{$row->getTableName()}` p");
+		foreach($filter as $condition){
+			$sql->where($condition);
 		}
-		$sql .= " ORDER BY {$ordering} {$order_dir}";
+		$sql->order("{$ordering} {$order_dir}");
 		$this->_data = $this->_getList($sql, $this->getState('limitstart'), $this->getState('limit'));
 
     	return $this->_data;

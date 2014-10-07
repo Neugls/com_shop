@@ -23,7 +23,8 @@ class ShopController extends JControllerLegacy
 	 */
 	public function __construct($config = array())
 	{
-		parent::__construct();
+		$config['default_view'] = 'carts';
+		parent::__construct($config);
 	}
 	
 	/**

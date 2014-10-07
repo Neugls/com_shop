@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields>
+		<fieldset name="hidden">
+			<field name="cart_id" type="hidden" filter="uint" />
+			<field name="cart_session" type="hidden" filter="cmd" />
+			<field name="customer_id" type="hidden" filter="uint" />
+			<field name="id" type="hidden" filter="uint" />
+		</fieldset>
+		<fieldset name="base">
+			<field name="cart_checkout" type="calendar" disabled="true" filter="unset" label="COM_SHOP_CART_CHECKOUT_LABEL" description="COM_SHOP_CART_CHECKOUT_DESC" />
+		</fieldset>
+		<fieldset name="options">
+			<field name="cart_status" type="list" filter="uint" class="radio btn-group validate-uint" required="true" default="1" label="COM_SHOP_CART_STATUS_LABEL" description="COM_SHOP_CART_STATUS_DESC">
+				<option value="0">COM_SHOP_CART_STATUS_OPEN</option>
+				<option value="1">COM_SHOP_CART_STATUS_ORDERED</option>
+				<option value="2">COM_SHOP_CART_STATUS_SHIPPING</option>
+				<option value="3">COM_SHOP_CART_STATUS_COMPLETE</option>
+			</field>
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="params">
+			<field name="billing_address" type="textarea" diabled="true" label="COM_SHOP_BILLING_ADDRESS_LABEL" description="COM_SHOP_BILLING_ADDRESS_DESC" />
+			<field name="shipping_address" type="textarea" diabled="true" label="COM_SHOP_SHIPPING_ADDRESS_LABEL" description="COM_SHOP_SHIPPING_ADDRESS_DESC" />
+		</fieldset>
+	</fields>
+</form>

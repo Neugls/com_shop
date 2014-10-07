@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="2.5" method="upgrade">
+<extension type="component" version="3.0" method="upgrade">
 	<name>COM_SHOP</name>
 	<creationDate>September 2014</creationDate>
 	<author>Alonzo C. Turner</author>
@@ -41,6 +41,11 @@
 	</languages>
 	<administration>
 		<menu>COM_SHOP_MENU_ITEM_ROOT</menu>
+		<submenu>
+			<menu view="carts">COM_SHOP_SUBMENU_CARTS</menu>
+			<menu view="customers">COM_SHOP_SUBMENU_CUSTOMERS</menu>
+			<menu view="products">COM_SHOP_SUBMENU_PRODUCTS</menu>
+		</submenu>
 		<languages folder="admin">
 			<language tag="en-US">language/en-US/en-US.com_shop.ini</language>
 			<language tag="en-US">language/en-US/en-US.com_shop.sys.ini</language>

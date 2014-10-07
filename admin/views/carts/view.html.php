@@ -1,6 +1,6 @@
 <?php
 /**
- * Shop Default View
+ * Shop Carts Admin View
  * 
  * @package		Shop
  * @subpackage	Components
@@ -12,7 +12,7 @@ defined( '_JEXEC' ) or die( 'Restricted access' );
 
 jimport( 'joomla.application.component.view' );
 
-class ShopViewShop extends JViewLegacy
+class ShopViewCarts extends JViewLegacy
 {
 	/**
 	 * Shop view display method
@@ -25,10 +25,10 @@ class ShopViewShop extends JViewLegacy
 		$this->setLayout($layout);
 		switch($layout){
 		case "list":
-			JToolBarHelper::title(JText::_('COM_SHOP_VIEW_SHOP_LIST_TITLE'), 'generic.png');
-			JToolBarHelper::addNew('shop.add', 'JTOOLBAR_NEW');
-			JToolBarHelper::editList('shop.edit', 'JTOOLBAR_EDIT', true);
-			JToolBarHelper::deleteList(JText::_('COM_SHOP_MSG_DELETE_CONFIRM'), 'shop.delete', 'JTOOLBAR_DELETE', true);
+			ShopHelper::addSubmenu('carts');
+			JToolBarHelper::title(JText::_('COM_SHOP_VIEW_CARTS_LIST_TITLE'), 'generic.png');
+			JToolBarHelper::editList('carts.edit', 'JTOOLBAR_EDIT', true);
+			JToolBarHelper::deleteList(JText::_('COM_SHOP_MSG_DELETE_CONFIRM'), 'carts.delete', 'JTOOLBAR_DELETE', true);
 			JToolBarHelper::preferences('com_shop', '500');
 			// GET DATA FROM THE MODEL
 			$this->filter = $this->get('State');
@@ -37,11 +37,10 @@ class ShopViewShop extends JViewLegacy
 			break;
 		default:
 			$input->set('hidemainmenu', 1);
-			JToolBarHelper::title(JText::_('COM_SHOP_VIEW_SHOP_EDIT_TITLE'), 'generic.png');
-			JToolBarHelper::apply('shop.apply');
-			JToolBarHelper::save('shop.save');
-			JToolBarHelper::save2new('shop.save2new');
-			JToolBarHelper::cancel('shop.cancel');
+			JToolBarHelper::title(JText::_('COM_SHOP_VIEW_CARTS_EDIT_TITLE'), 'generic.png');
+			JToolBarHelper::apply('carts.apply');
+			JToolBarHelper::save('carts.save');
+			JToolBarHelper::cancel('carts.cancel');
 			$this->form = $this->get('Form');
 			break;
 		}

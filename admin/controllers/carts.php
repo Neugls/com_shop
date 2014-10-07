@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Shop Controller
+ * Shop Carts Admin Controller
  *
  * @package		Shop
  * @subpackage	Components
@@ -20,7 +20,7 @@ if(!JFactory::getUser()->authorise('core.manage', 'com_shop')){
 // IMPORT BASE CONTROLLER LIBRARY
 require_once('base.php');
 
-class ShopControllerShop extends ShopControllerBase
+class ShopControllerCarts extends ShopControllerBase
 {
 	/**
 	 * constructor (registers additional tasks to methods)
@@ -28,7 +28,9 @@ class ShopControllerShop extends ShopControllerBase
 	 */
 	public function __construct($config = array())
 	{
-		parent::__construct();
+		$this->view_item = 'carts';
+		$this->view_list = 'carts';
+		parent::__construct($config);
 	}
 	/**
 	 * A convenience method for filtering lists.

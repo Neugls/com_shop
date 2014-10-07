@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<form>
+	<fields>
+		<fieldset name="hidden">
+			<field name="product_id" type="hidden" filter="uint" />
+			<field name="ordering" type="hidden" filter="uint" />
+		</fieldset>
+		<fieldset name="base">
+			<field name="product_name" type="text" class="validate-string" filter="string" required="true" label="COM_SHOP_PRODUCT_NAME_LABEL" description="COM_SHOP_PRODUCT_NAME_DESC" />
+			<field name="product_alias" type="text" class="validate-cmd" filter="cmd" required="true" label="COM_SHOP_PRODUCT_ALIAS_LABEL" description="COM_SHOP_PRODUCT_ALIAS_DESC" />
+			<field name="product_sku" type="text" class="validate-cmd" filter="cmd" required="true" label="COM_SHOP_PRODUCT_SKU_LABEL" description="COM_SHOP_PRODUCT_SKU_DESC" />
+			<field name="product_price" type="text" class="validate-float" filter="float" required="true" label="COM_SHOP_PRODUCT_PRICE_LABEL" description="COM_SHOP_PRODUCT_PRICE_DESC" />
+		</fieldset>
+		<fieldset name="editor">
+			<field name="product_description" type="editor" filter="safehtml" label="COM_SHOP_SHOP_DESCRIPTION_LABEL" description="COM_SHOP_SHOP_DESCRIPTION_DESC" />
+		</fieldset>
+		<fieldset name="options">
+			<field name="state" type="radio" filter="uint" class="radio btn-group validate-uint" required="true" default="1" label="COM_SHOP_PUBLISHED_LABEL" description="COM_SHOP_PUBLISHED_DESC">
+				<option value="1">COM_SHOP_BOOLEAN_TRUE</option>
+				<option value="0">COM_SHOP_BOOLEAN_FALSE</option>
+			</field>
+			<field name="publish_up" type="calendar" format="%Y-%m-%d %H:%M:%S" filter="user_utc" default="0000-00-00 00:00:00" label="COM_SHOP_PUBLISH_UP_LABEL" description="COM_SHOP_PUBLISH_UP_DESC" />
+			<field name="publish_down" type="calendar" format="%Y-%m-%d %H:%M:%S" filter="user_utc" default="0000-00-00 00:00:00" label="COM_SHOP_PUBLISH_UP_LABEL" description="COM_SHOP_PUBLISH_UP_DESC" />
+			<field name="access" type="accesslevel" filter="uint" class="validate-uint" required="true" default="1" label="COM_SHOP_ACCESS_LABEL" description="COM_SHOP_ACCESS_DESC" />
+		</fieldset>
+		<fieldset name="metadata">
+			<field name="meta_description" type="textarea" class="validate-string" rows="5" cols="30" default="" label="COM_SHOP_META_DESCRIPTION_LABEL" description="COM_SHOP_META_DESCRIPTION_DESC" />
+			<field name="meta_keywords" type="textarea" class="validate-string" rows="5" cols="30" default="" label="COM_SHOP_META_KEYWORDS_LABEL" description="COM_SHOP_META_KEYWORDS_DESC" />
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="params">
+			<field name="class_sfx" type="text" size="20" default="" label="COM_SHOP_CLASS_SUFFIX_LABEL" description="COM_SHOP_CLASS_SUFFIX_DESC" />
+		</fieldset>
+	</fields>
+</form>
