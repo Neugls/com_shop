@@ -38,18 +38,18 @@ class ShopModelProducts extends JModelAdmin
      var $_pagination	= null;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
 	 *
-	 * @see     JController
-	 * @since   11.1
+	 * @since   1.0
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
 		$this->populateState();
 	}
+	
     /**
      * Retrieves the Item data
      *
@@ -108,7 +108,7 @@ class ShopModelProducts extends JModelAdmin
 		$db->setQuery($query);
 		$this->_data = $db->loadAssoc();
 		$ini = new JRegistry();
-		$ini->loadString($this->_data['attribs']);
+		$ini->loadString($this->_data['params']);
 		$this->_data['params'] = $ini->toArray();
 
 		return $this->_data;
