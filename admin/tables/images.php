@@ -2,7 +2,7 @@
 // NO DIRECT ACCESS
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class TableShop extends JTable
+class TableImages extends JTable
 {
 	/** @var int Primary Key */
 	var $image_id			= null;
