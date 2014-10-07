@@ -138,7 +138,9 @@ class ShopModelProducts extends JModelAdmin
     		$order_dir = "ASC";
     	}
     	$sql->select("SQL_CALC_FOUND_ROWS p.*");
+    	$sql->select("u.`name` AS `editor`");
     	$sql->from("`{$row->getTableName()}` p");
+    	$sql->join("left", "`#__users` u ON p.`checked_out` = u.`id`");
 		foreach($filter as $condition){
 			$sql->where($condition);
 		}
