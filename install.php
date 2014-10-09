@@ -41,7 +41,25 @@ class com_shopInstallerScript
 			}
 		}
 		else { $rel = $this->release; }
- 
+		
+		// ABORT IF THE SERVER ENVIRONMENT DOES NOT INCLUDE THE GD LIBRARIES
+		if (!extension_loaded('gd')) {
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_SHOP_MSG_ERROR_GD_MISSING'), 'error');
+			return false;
+		}
+		
+		// ABORT IF THE IMAGES DIRECTORY IS NOT WRITEABLE
+		if(!is_writeable(JPATH_ROOT."/images")){
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_SHOP_MSG_ERROR_INSTALL_PERMISSIONS'), 'error');
+			return false;
+		}
+		
+		// ABORT IF THE MEDIA DIRECTORY IS NOT WRITEABLE
+		if(!is_writable(JPATH_ROOT."/media")){
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_SHOP_MSG_ERROR_INSTALL_PERMISSIONS'), 'error');
+			return false;
+		}
+
 		echo '<p>' . JText::_('COM_SHOP_MSG_SUCCESS_PREFLIGHT') . '</p>';
 	}
  
@@ -49,6 +67,11 @@ class com_shopInstallerScript
 	 * INSTALL
 	 */
 	function install( $parent ) {
+		if(!rename(JPATH_ROOT."/administrator/components/com_shop/images", JPATH_ROOT."/images/shop")){
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_SHOP_MSG_ERROR_INSTALL_IMAGES_DIR'), 'error');
+		    return false;
+		}
+		echo '<p>' . JText::_('COM_SHOP_MSG_SUCCESS_INSTALL_IMAGES_DIR') . '</p>';
 		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_INSTALL', $this->release) . '</p>';
 	}
  
@@ -71,7 +94,31 @@ class com_shopInstallerScript
 	 */
 	function uninstall( $parent ) {
 		if(!isset($this->release)) $this->release = '0.0.1';
+		if(file_exists(JPATH_ROOT."/images/shop")){
+		    $this->deleteDir(JPATH_ROOT."/images/slideshow");
+		}
+		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_UNINSTALL_IMAGES_DIR', $this->release) . '</p>';
 		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_UNINSTALL', $this->release) . '</p>';
+	}
+ 
+	/*
+	 * DELETE RESOURCES
+	 */
+	protected function deleteDir($some_dir){
+		if(is_dir($some_dir)){
+			$handle = opendir($some_dir);
+			while(false !== ($file = readdir($handle))){
+				if($file != "." && $file != ".."){
+					if(is_dir($some_dir . "/" . $file)){
+						$this->deleteDir($some_dir . "/" . $file);
+					}else{
+						unlink($some_dir . "/" . $file);
+					}
+				}
+			}
+			closedir($handle);
+			rmdir($some_dir);
+		}
 	}
  
 	/*

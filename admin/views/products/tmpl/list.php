@@ -5,15 +5,15 @@
 	$user = JFactory::getUser();
 	$user_id = $user->get('id');
 	$sortFields = array();
-	$sortFields['shop_name'] = JText::_('COM_SHOP_LIST_SHOP_NAME_LABEL');
-	$sortFields['published'] = JText::_('COM_SHOP_LIST_PUBLISHED_LABEL');
+	$sortFields['product_name'] = JText::_('COM_SHOP_LIST_PRODUCT_NAME_LABEL');
+	$sortFields['state'] = JText::_('COM_SHOP_LIST_PUBLISHED_LABEL');
 	$sortFields['ordering'] = JText::_('COM_SHOP_LIST_ORDERING_LABEL');
-	$sortFields['s.access'] = JText::_('COM_SHOP_LIST_ACCESS_LABEL');
-	$sortFields['shop_id'] = JText::_('COM_SHOP_LIST_ID_LABEL');
+	$sortFields['access'] = JText::_('COM_SHOP_LIST_ACCESS_LABEL');
+	$sortFields['product_id'] = JText::_('COM_SHOP_LIST_ID_LABEL');
 	$saveOrder = $this->filter->filter_order == 'ordering';
 	if ($saveOrder)
 	{
-		$saveOrderingUrl = 'index.php?option=com_shop&task=shop.saveOrderAjax&tmpl=component';
+		$saveOrderingUrl = 'index.php?option=com_shop&task=products.saveOrderAjax&tmpl=component';
 		JHtml::_('sortablelist.sortable', 'data-table', 'adminForm', strtolower($this->filter->filter_order_Dir), $saveOrderingUrl);
 	}
 ?>
@@ -103,8 +103,8 @@
 		$k = 0;
 		for($i=0; $i < count($this->items); $i++){
 			$row		= $this->items[$i];
-			$checked	= JHtml::_('grid.id', $i, $row->shop_id);
-			$link		= JRoute::_('index.php?option=com_shop&task=shop.edit&shop_id='. $row->shop_id.'&'.JSession::getFormToken().'=1');
+			$checked	= JHtml::_('grid.id', $i, $row->product_id);
+			$link		= JRoute::_('index.php?option=com_shop&task=products.edit&product_id='. $row->product_id.'&'.JSession::getFormToken().'=1');
 			$canCreate  = $user->authorise('core.create',     'com_shop');
 			$canEdit    = $user->authorise('core.edit',       'com_shop');
 			$canCheckin = $user->authorise('core.manage',     'com_checkin') || $row->checked_out == $user_id || $row->checked_out == 0;
@@ -135,18 +135,18 @@
 					<?php echo $checked; ?>
 				</td>
 				<td align="center">
-					<?php echo JHtml::_('jgrid.published', $row->published, $i, 'shop.', $canChange, 'cb'); ?>
+					<?php echo JHtml::_('jgrid.published', $row->state, $i, 'products.', $canChange, 'cb'); ?>
 				</td>
 				<td  class="nowrap">
 					<?php
 					if($row->checked_out){
-						echo JHtml::_('jgrid.checkedout', $i, $row->editor, $row->checked_out_time, 'shop.', $canCheckin);
-						echo "<span class=\"title\">".JText::_( $row->shop_name)."</span>";
+						echo JHtml::_('jgrid.checkedout', $i, $row->editor, $row->checked_out_time, 'products.', $canCheckin);
+						echo "<span class=\"title\">".JText::_( $row->product_name )."</span>";
 					}else{
 						if($canEdit || $canEditOwn){
-							echo "<a href=\"{$link}\">" . htmlspecialchars($row->shop_name, ENT_QUOTES) . "</a>";
+							echo "<a href=\"{$link}\">" . htmlspecialchars($row->product_name, ENT_QUOTES) . "</a>";
 						}else{
-							echo "<span class=\"title\">".JText::_( $row->shop_name)."</span>";
+							echo "<span class=\"title\">".JText::_( $row->product_name )."</span>";
 						}
 					}
 					?>
@@ -155,10 +155,10 @@
 					<?php echo $row->access; ?>
 				</td>
 				<td>
-					<?php $words = explode(" ", strip_tags($row->shop_description)); echo implode(" ", array_splice($words, 0, 55)); ?>
+					<?php $words = explode(" ", strip_tags($row->product_description)); echo implode(" ", array_splice($words, 0, 55)); ?>
 				</td>
 				<td>
-					<?php echo $row->shop_id; ?>
+					<?php echo $row->product_id; ?>
 				</td>
 			</tr>
 			<?php

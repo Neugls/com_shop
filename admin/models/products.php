@@ -149,6 +149,28 @@ class ShopModelProducts extends JModelAdmin
 
     	return $this->_data;
     }
+    
+    /**
+     * Method to retrieve image data for a selected product
+     *
+     * @return array An array of data objects
+     *
+     * @since 1.0
+     */
+    function getProductImages(){
+    	$id		= $this->_getCid();
+    	$db		= $this->getDbo();
+    	$sql	= $db->getQuery(true);
+    	
+    	$sql->select("*");
+    	$sql->from("#__shop_images");
+    	$sql->where("product_id = {$id}");
+    	$sql->order("ordering ASC");
+    	
+    	$db->setQuery($sql);
+    	return $db->loadObjectList();
+    }
+    
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -190,6 +212,7 @@ class ShopModelProducts extends JModelAdmin
     
     	return $this->_pagination;
     }
+    
 	/**
 	 * A utility method for retrieving an item Id
 	 *
@@ -201,4 +224,88 @@ class ShopModelProducts extends JModelAdmin
 		$row = $this->getTable();
 		return JFactory::getApplication()->input->get($row->getKeyName(), 0, 'int');
 	}
+	
+    /**
+     * Upload any product images set in the product edit form
+     *
+     * @param   int     $product_id     The primary key of the intended product
+     *
+     * @return  bool
+     *
+     * @since   1.0
+     */
+    public function uploadImages($product_id){
+    	if(!(int)$product_id){
+    		throw new UnexpectedValueException(JText::_('COM_SHOP_MSG_ERROR_INVALID_DATA'));
+    		return false;
+    	}
+    	$input = JFactory::getApplication()->input;
+    	$files = $input->files->get('jform');
+    	if(is_array($files['images'])){
+    		foreach($files['images'] as $original){
+    			switch($original['error']){
+    			case 0:
+    			// UPLOAD THE IMAGE
+    				$upload = $original['tmp_name'];
+    				$target = JPATH_ROOT."/images/shop/originals/".$original['name'];
+    				if(!JFile::upload($upload, $target)){ 
+    					return false;
+    				}
+    				$options = JComponentHelper::getParams('com_shop');
+    				
+    				$this->createProductImage($target, "/images/shop/full/", $options->get('img_width'), $options->get('img_height'));
+    				$this->createProductImage($target, "/images/shop/thumbnails/", $options->get('thumb_width'), $options->get('thumb_height'));
+    				$table = $this->getTable('Images');
+    				$table->bind(array(
+    					'product_id' => $product_id,
+    					'image_source' => "images/shop/originals/".$original['name'],
+    					'image_full' => "images/shop/full/".$original['name'],
+    					'image_thumbnail' => "images/shop/thumbnails/".$original['name']
+    				));
+    				$table->check();
+    				$table->store();
+    				break;
+    			case 4:
+    			// NO IMAGE WAS SET DO NOTHING
+    				break;
+    			default:
+    			// THERE WAS A FILE UPLOAD ERROR
+    				return false;
+    				break;
+    			}
+    		}
+    	}
+    	return true;
+    }
+    
+    /**
+     * Create a cropped and resized image from the uploaded original
+     *
+     * @param   string  $src    Path to source file
+     * @param   string  $dest   Path to destination file
+     * @param   int     $width  Path to source file
+     * @param   int     $height Path to destination file
+     *
+     * @return bool
+     */
+    protected function createProductImage($src, $dest, $width, $height){
+    	$original = new JImage($src);
+    	//$thumb = $original->cropResize($width, $height, true);
+    	$org_width = $original->getWidth();
+    	$org_height = $original->getHeight();
+    	if(($org_width / $width) < ($org_height / $height)){
+    		$original->resize($width, 0, false);
+    	}else{
+    		$original->resize(0, $height, false);
+    	}
+    	$thumb = $original->crop($width, $height, null, null, true);
+		$filename = pathinfo($original->getPath(), PATHINFO_FILENAME);
+		$extension = pathinfo($original->getPath(), PATHINFO_EXTENSION);
+		if(!$thumb->toFile(JPATH_ROOT.$dest.$filename.".".$extension)){
+			return false;
+		}
+		$original->destroy();
+		$thumb->destroy();
+		return true;
+    }
 }

@@ -32,6 +32,7 @@ class ShopControllerProducts extends ShopControllerBase
 		$this->view_list = 'products';
 		parent::__construct($config);
 	}
+	
 	/**
 	 * A convenience method for filtering lists.
 	 *
@@ -43,4 +44,22 @@ class ShopControllerProducts extends ShopControllerBase
 		$this->setRedirect(JRoute::_("index.php?option=com_shop&view=".$this->view_list, false));
 		return true;
 	}
+	
+	/**
+	 * Function that allows child controller access to model data
+	 * after the data has been saved.
+	 *
+	 * @param   JModelForm  $model      The data model object.
+	 * @param   array       $validData  The validated data.
+	 *
+	 * @return  void
+	 */
+	protected function postSaveHook(JModelForm $model, $validData = array())
+	{
+		$id = $model->getState($this->context . '.id');
+		if(!$model->uploadImages($id)){
+			JFactory::getApplication()->enqueueMessage(JText::_('COM_RETAIL_MSG_ERROR_IMAGE_UPLOAD'), 'warning');
+		}
+	}
+	
 }

@@ -41,7 +41,6 @@ class TableImages extends JTable
 		if(!parent::store($updateNulls)){
 			return false;
 		}
-		$this->reorder("product_id = ".$this->product_id);
 		return true;
 	}
 }

@@ -33,4 +33,9 @@
 			<field name="class_sfx" type="text" size="20" default="" label="COM_SHOP_CLASS_SUFFIX_LABEL" description="COM_SHOP_CLASS_SUFFIX_DESC" />
 		</fieldset>
 	</fields>
+	<fields name="images">
+	    <fieldset name="images">
+	        <field name="product_image" type="file" label="COM_SHOP_PRODUCT_IMAGE_LABEL" description="COM_SHOP_PRODUCT_IMAGE_DESC" />
+	    </fieldset>
+	</fields>
 </form>

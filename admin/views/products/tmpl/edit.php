@@ -3,6 +3,10 @@
 	JHtml::_('behavior.modal');
 	JHtml::_('behavior.tooltip');
 	JHtml::_('behavior.formvalidation');
+    $saveOrderingUrl = 'index.php?option=com_shop&task=images.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'image-table', 'adminForm', 'asc', $saveOrderingUrl);
+    $doc = JFactory::getDocument();
+    $doc->addStyleDeclaration('div.thumb { width: 20%; float: left; }');
 ?>
 
 <script type="text/javascript">
@@ -11,8 +15,10 @@
 		var $, UIView;
 		$ = jQuery;
 		UIView = (function() {
+		    // CONSTRUCTOR METHOD
 			function UIView() {
-				// CONSTRUCTOR METHOD
+				$('div.product-thumbnails a.thumbnail').on('click', $.proxy(this.updatePreview, this));
+				$('div.btn-toolbar button.action').on('click', $.proxy(this.handleAction, this));
 				document.formvalidator.setHandler('uint', function(value){
 					re_uint = /^\d+$/;
 					return re_uint.test(value);
@@ -42,10 +48,64 @@
 				}
 			}
 		
-			UIView.prototype.sampleMethod = function() {
-				// OBJECT METHOD
+			UIView.prototype.updatePreview = function(evt) {
+				// EVENT METHOD
+				evt.preventDefault();
+				var target = $(evt.delegateTarget);
+				$('#product-preview').attr('src', target.data('src')); 
 			}
-
+		
+			UIView.prototype.handleAction = function(evt) {
+				// EVENT METHOD
+				evt.preventDefault();
+				var target = $(evt.delegateTarget);
+				var task = target.data('task');
+				var nonce = $('#nonce-token').prop('name');
+				var selected = $('input[name="cid[]"]:checked').map(function(){ return this.value; }).get();
+				var postData = {};
+				if(selected.length < 1){
+			        $('#system-message-container').append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">Error</h4><p><?php echo JText::_("COM_SHOP_NO_ITEM_SELECTED"); ?></p></div>');
+				    return false;
+				}
+				switch(task){
+				case "images.edit":
+				    break;
+				case "images.delete":
+				    postData["option"] = "com_shop";
+				    postData["tmpl"] = "component";
+				    postData["cid"] = selected;
+				    postData["task"] = task;
+				    postData[nonce] = "1";
+				    window.console.log(postData);
+				    $.post("<?php echo JRoute::_('index.php'); ?>", postData, this.receiveActionResponse, "json" );
+				    break;
+				}
+			}
+		
+			UIView.prototype.receiveActionResponse = function(data) {
+				// AJAX METHOD
+				if(typeof data == "object"){
+				    var message;
+				    var message_type;
+				    var alert_type;
+				    if(data.status){
+				        message = data.message;
+				        message_type = "Success";
+				        alert_type = "success";
+				        for(var i=0; i < data.targets.length; i++){
+				            var mark = 'tr[data-id="'+data.targets[i]+'"]';
+				            $(mark).remove();
+				        }
+				    }
+				}else{
+				    // THERE WAS AN ERROR
+				    message = "<?php echo JText::_('COM_SHOP_MSG_ERROR_IMAGE_DELETE'); ?>";
+				    message_type = "Warning";
+				    alert_type = "error";
+				}
+			    $('#system-message-container').append('<div class="alert alert-'+alert_type+'"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">'+message_type+'</h4><p>'+message+'</p></div>');
+			}
+		
 			return UIView;
 		})();
 	
@@ -63,6 +123,7 @@
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="hidemainmenu" value="0" />
 	<input type="hidden" name="product_id" value="<?php echo $this->form->getValue('product_id'); ?>" />
+	<input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" id="nonce-token" />
 	<?php echo JHtml::_('form.token')."\n"; ?>
 	<div id="editcell">
 	    <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'base')); ?>
@@ -122,9 +183,47 @@
 	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'images', JText::_('COM_SHOP_FORM_LEGEND_IMAGES', true)); ?>
 		<div class="row-fluid">
 		    <div class="span4">
+		        <div class="well">
+                <?php foreach($this->form->getFieldset('images') as $field) echo $field->renderField(); ?>
+                </div>
+                <?php if(isset($this->images[0])){ ?>
+                    <p><img src="/<?php echo $this->images[0]->image_full; ?>" id="product-preview" alt="" title="" /></p>
+                    <div class="product-thumbnails">
+                        <?php foreach($this->images as $thumb){ ?>
+                        <div class="thumb">
+                            <a href="#" class="thumbnail" data-src="/<?php echo $thumb->image_full; ?>">
+                                <img src="/<?php echo $thumb->image_thumbnail; ?>" alt="<?php echo $thumb->image_alt; ?>" title="" />
+                            </a>
+                        </div>
+                        <?php } ?>
+                    </div>
+                <?php } ?>
 		    </div>
 		    <div class="span8">
-		        <table class="table">
+		        <div class="btn-toolbar"><button class="btn btn-mini btn-danger action" data-task="images.delete"><i class="icon-delete"></i> <?php echo JText::_('COM_SHOP_IMAGE_ACTION_LABEL'); ?></button></div>
+		        <table class="table table-striped" id="image-table">
+		            <thead>
+		                <tr>
+		                    <th class="center"><i class="icon-menu-2"></i></th>
+		                    <th class="center"><input type="checkbox" name="toggle" value="" onclick="Joomla.checkAll(this)" /></th>
+		                    <th><?php echo JText::_('COM_SHOP_IMAGE_THUMBNAIL_LABEL'); ?></th>
+		                    <th><?php echo JText::_('COM_SHOP_IMAGE_SOURCE_LABEL'); ?></th>
+		                </tr>
+		            </thead>
+		            <tbody>
+                    <?php $i=0;foreach($this->images as $img){ ?>
+                    <?php $checked	= JHtml::_('grid.id', $i, $img->image_id); $i++; ?>
+                        <tr data-id="<?php echo $img->image_id; ?>">
+                            <td class="order center ">
+                                <span class="sortable-handler"><i class="icon-menu"></i></span>
+						        <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $img->ordering;?>" class="width-20 text-area-order " />
+                            </td>
+                            <td class="center"><?php echo $checked; ?></td>
+                            <td><img src="/<?php echo $img->image_thumbnail; ?>" title="" alt="" /></td>
+                            <td><?php echo $img->image_source; ?></td>
+                        </tr>
+                    <?php } ?>
+		            </tbody>
 		        </table>
 		    </div>
 		</div>
