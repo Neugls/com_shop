@@ -95,7 +95,7 @@ class com_shopInstallerScript
 	function uninstall( $parent ) {
 		if(!isset($this->release)) $this->release = '0.0.1';
 		if(file_exists(JPATH_ROOT."/images/shop")){
-		    $this->deleteDir(JPATH_ROOT."/images/slideshow");
+		    $this->deleteDir(JPATH_ROOT."/images/shop");
 		}
 		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_UNINSTALL_IMAGES_DIR', $this->release) . '</p>';
 		echo '<p>' . JText::sprintf('COM_SHOP_MSG_SUCCESS_UNINSTALL', $this->release) . '</p>';
