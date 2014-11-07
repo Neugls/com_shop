@@ -11,12 +11,16 @@
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
 function ShopBuildRoute(&$query){
-	$segments	= array();
-	if(!empty($segments['layout'])){
+	$segments = array();
+	if(!empty($query['view'])){
+		$segments[] = $query['view'];
+		unset($query['view']);
+	}
+	if(!empty($query['layout'])){
 		$segments[] = $query['layout'];
 		unset($query['layout']);
 	}
-	if(!empty($segments['id'])){
+	if(!empty($query['id'])){
 		$segments[] = $query['id'];
 		unset($query['id']);
 	}
@@ -29,8 +33,12 @@ function ShopBuildRoute(&$query){
 
 function ShopParseRoute($segments){
 	$query	= array();
-	$query['layout'] = $segments[0];
-	$query['id'] = array_shift(explode(":", $segments[1]));
+	$query['view'] = $segments[0];
+	$query['layout'] = $segments[1];
+	if($segments[2]){
+		$parts = explode(":", $segments[2]);
+		$query['id'] = array_shift($parts);
+	}
 
 	return $query;
 }
