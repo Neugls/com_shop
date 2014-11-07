@@ -44,7 +44,9 @@ class ShopViewProducts extends JViewLegacy
 			JToolBarHelper::save2new('products.save2new');
 			JToolBarHelper::cancel('products.cancel');
 			$this->form = $this->get('Form');
+			$this->optionsForm = $this->get('OptionsForm');
 			$this->images = $this->get('ProductImages');
+			$this->options = $this->get('ProductOptions');
 			break;
 		}
 		parent::display($tpl);

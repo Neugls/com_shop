@@ -230,7 +230,22 @@
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
 	    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('COM_SHOP_FORM_LEGEND_OPTIONS', true)); ?>
 		<div class="row-fluid">
-		    <div class="span12">
+		    <div class="span4">
+		    	<fieldset class="well">
+		        <div class="btn-toolbar"><button class="btn btn-mini btn-success action" data-task="option.save"><i class="icon-apply"></i> <?php echo JText::_('COM_SHOP_OPTION_ACTION_LABEL'); ?></button></div>
+		    	<?php
+		    	/*
+		    	foreach($this->optionsForm->getFieldset('base') as $field){
+		    		echo $field->renderField();
+		    	}
+		    	foreach($this->optionsForm->getFieldset('hidden') as $field){
+		    		echo $field->renderField();
+		    	}
+		    	*/
+		    	?>
+		    	</fieldset>
+		    </div>
+		    <div class="span8">
 		    </div>
 		</div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>

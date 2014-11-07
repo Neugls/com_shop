@@ -125,4 +125,24 @@ class TableProducts extends JTable
 		}
 		return true;
 	}
+
+	/**
+	 * Method to retrieve a std class object populated with data queried from the
+	 * database. This method uses load so as to trigger all table observer events.
+	 *
+	 * @param   mixed    $key   A primary key value to load the data by.
+	 *
+	 * @return  mixed  Object on success and boolean false if there is an error.
+	 *
+	 * @since   1.0
+	 * @throws  InvalidArgumentException
+	 * @throws  RuntimeException
+	 * @throws  UnexpectedValueException
+	 */
+	public function getData( $key )
+	{
+		$this->load($key);
+		$fields = $this->getProperties();
+		return JArrayHelper::toObject($fields);
+	}
 }
