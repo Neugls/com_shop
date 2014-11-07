@@ -123,7 +123,6 @@ class TableProducts extends JTable
 		if(!parent::store($updateNulls)){
 			return false;
 		}
-		$this->reorder();
 		return true;
 	}
 }
