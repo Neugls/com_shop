@@ -258,6 +258,7 @@ class ShopModelProducts extends JModelAdmin
     		throw new UnexpectedValueException(JText::_('COM_SHOP_MSG_ERROR_INVALID_DATA'));
     		return false;
     	}
+    	jimport('joomla.filesystem.file');
     	$input = JFactory::getApplication()->input;
     	$files = $input->files->get('jform');
     	if(is_array($files['images'])){

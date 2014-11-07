@@ -61,22 +61,21 @@
 				var target = $(evt.delegateTarget);
 				var task = target.data('task');
 				var nonce = $('#nonce-token').prop('name');
-				var selected = $('input[name="cid[]"]:checked').map(function(){ return this.value; }).get();
 				var postData = {};
-				if(selected.length < 1){
-			        $('#system-message-container').append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">Error</h4><p><?php echo JText::_("COM_SHOP_NO_ITEM_SELECTED"); ?></p></div>');
-				    return false;
-				}
 				switch(task){
 				case "images.edit":
 				    break;
 				case "images.delete":
+					var selected = $('input[name="cid[]"]:checked').map(function(){ return this.value; }).get();
+					if(selected.length < 1){
+						$('#system-message-container').append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">Error</h4><p><?php echo JText::_("COM_SHOP_NO_ITEM_SELECTED"); ?></p></div>');
+						return false;
+					}
 				    postData["option"] = "com_shop";
 				    postData["tmpl"] = "component";
 				    postData["cid"] = selected;
 				    postData["task"] = task;
 				    postData[nonce] = "1";
-				    window.console.log(postData);
 				    $.post("<?php echo JRoute::_('index.php'); ?>", postData, this.receiveActionResponse, "json" );
 				    break;
 				}
@@ -88,18 +87,26 @@
 				    var message;
 				    var message_type;
 				    var alert_type;
-				    if(data.status){
-				        message = data.message;
-				        message_type = "Success";
-				        alert_type = "success";
-				        for(var i=0; i < data.targets.length; i++){
-				            var mark = 'tr[data-id="'+data.targets[i]+'"]';
-				            $(mark).remove();
-				        }
+				    switch(data.task){
+				    case "images.delete":
+						if(data.status){
+							message = data.message;
+							message_type = "Success";
+							alert_type = "success";
+							for(var i=0; i < data.targets.length; i++){
+								var mark = 'tr[data-id="'+data.targets[i]+'"]';
+								$(mark).remove();
+							}
+						}
+						break;
+					case "options.save":
+						break;
+					case "options.delete":
+						break;
 				    }
 				}else{
 				    // THERE WAS AN ERROR
-				    message = "<?php echo JText::_('COM_SHOP_MSG_ERROR_IMAGE_DELETE'); ?>";
+				    message = "<?php echo JText::_('COM_SHOP_MSG_ERROR_AJAX'); ?>";
 				    message_type = "Warning";
 				    alert_type = "error";
 				}
