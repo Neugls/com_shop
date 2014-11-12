@@ -2,7 +2,7 @@
 // NO DIRECT ACCESS
 defined( '_JEXEC' ) or die( 'Restricted access' );
 
-class TableCarts extends JTable
+class TableCart extends JTable
 {
 	/** @var int Primary Key */
 	var $cart_id			= null;
@@ -29,8 +29,36 @@ class TableCarts extends JTable
 	/** @var int User ID */
 	var $id					= null;
 	
-	public function TableCarts(& $db){
+	public function __construct(&$db){
 		parent::__construct('#__shop_carts', 'cart_id', $db);
+		$user = JFactory::getUser();
+		$sql = $db->getQuery(true);
+		if($user->get('guest') == 1){
+		    $session = JFactory::getSession();
+		    $session_id = $session->getId();
+		    $sql->select("c.`cart_id`");
+		    $sql->from("`#__shop_carts` c");
+		    $sql->where("( `cart_status` = 0 )");
+		    $sql->where("( `cart_session` = '{$session_id}' )");
+		    $db->setQuery($sql);
+		    if( !$id = $db->loadResult() ){
+		        $this->save(array('cart_session' => $session_id));
+		    }else{
+		        $this->load($id);
+		    }
+		}else{
+		    $user_id = $user->get('id');
+		    $sql->select("c.`cart_id`");
+		    $sql->from("`#__shop_carts` c");
+		    $sql->where("( `cart_status` = 0 )");
+		    $sql->where("( `id` = '{$user_id}' )");
+		    $db->setQuery($sql);
+		    if( !$id = $db->loadResult() ){
+		        $this->save(array('id' => $user_id));
+		    }else{
+		        $this->load($id);
+		    }
+		}
 	}
 	
 	public function bind($array, $ignore=''){
@@ -50,6 +78,7 @@ class TableCarts extends JTable
 	
 	public function store($updateNulls = false){
 		$date = JDate::getInstance('now', 'UTC');
+		$user = JFactory::getUser();
 		if(!$this->cart_id){
 			$this->created = $date->toSql(true);
 			$this->created_by = $user->get('id');

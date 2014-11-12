@@ -3,10 +3,15 @@
 	<fields>
 		<fieldset name="params" label="COM_SHOP_OPTIONS_FIELDSET_LEGEND">
 			<field name="default_id" type="menuitem" default="" label="COM_SHOP_DEFAULT_ROUTE_ID_LABEL" description="COM_SHOP_DEFAULT_ROUTE_ID_DESC" />
-		    <field name="img_width" type="text" default="450" filter="uint" label="COM_SHOP_IMG_WIDTH_LABEL" description="COM_SHOP_IMG_WIDTH_DESC" />
-		    <field name="img_height" type="text" default="600" filter="uint" label="COM_SHOP_IMG_HEIGHT_LABEL" description="COM_SHOP_IMG_HEIGHT_DESC" />
-		    <field name="thumb_width" type="text" default="65" filter="uint" label="COM_SHOP_THUMB_WIDTH_LABEL" description="COM_SHOP_THUMB_WIDTH_DESC" />
-		    <field name="thumb_height" type="text" default="65" filter="uint" label="COM_SHOP_THUMB_HEIGHT_LABEL" description="COM_SHOP_THUMB_HEIGHT_DESC" />
+		    <field name="business" type="text" required="true" label="COM_SHOP_PAYPAL_ID_LABEL" description="COM_SHOP_PAYPAL_ID_DESC" />
+		    <field name="img_width" type="text" required="true" default="450" filter="uint" label="COM_SHOP_IMG_WIDTH_LABEL" description="COM_SHOP_IMG_WIDTH_DESC" />
+		    <field name="img_height" type="text" required="true" default="600" filter="uint" label="COM_SHOP_IMG_HEIGHT_LABEL" description="COM_SHOP_IMG_HEIGHT_DESC" />
+		    <field name="thumb_width" type="text" required="true" default="65" filter="uint" label="COM_SHOP_THUMB_WIDTH_LABEL" description="COM_SHOP_THUMB_WIDTH_DESC" />
+		    <field name="thumb_height" type="text" required="true" default="65" filter="uint" label="COM_SHOP_THUMB_HEIGHT_LABEL" description="COM_SHOP_THUMB_HEIGHT_DESC" />
+		    <field name="anonymous" type="radio" default="0" class="radio btn-group" filter="uint" label="COM_SHOP_ANONYMOUS_USER_LABEL" description="COM_SHOP_ANONYMOUS_USER_DESC">
+		        <option value="0">COM_SHOP_BOOLEAN_FALSE</option>
+		        <option value="1">COM_SHOP_BOOLEAN_TRUE</option>
+		    </field>
 		</fieldset>
 		<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL">
 			<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC" class="inputbox" validate="rules" filter="rules" component="com_shop" section="component" />
