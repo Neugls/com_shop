@@ -14,8 +14,8 @@ class ShopViewCart extends JViewLegacy
 {
 	function display($tpl = null)
 	{
-		$this->data = $this->get('Data');
-		$this->items = $this->get('List');
+	    $this->items = $this->get('List');
+	    $this->cart = $this->get('Data');
 		parent::display($tpl);
 	}
 }

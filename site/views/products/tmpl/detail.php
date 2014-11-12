@@ -127,13 +127,14 @@
 		<?php echo $this->data->product_description; ?>
 		<form name="shop" id="shop-product" action="" method="post">
 			<input type="hidden" name="option" value="com_shop" />
-			<input type="hidden" name="task" value="cart.addtocart" />
-			<input type="hidden" name="product_id" value="<?php echo $this->data->product_id; ?>" />
+			<input type="hidden" name="task" value="cart.addToCart" />
+			<input type="hidden" name="jform[product_id]" value="<?php echo $this->data->product_id; ?>" />
+			<input type="hidden" name="<?php echo JSession::getFormToken(); ?>" value="1" />
 			<?php foreach($this->options as $options){ ?>
 			<div class="control-group">
-				<label for="option-<?php echo $options[0]->option_key; ?>" class="control-label"><?php echo ucfirst($options[0]->option_key); ?></label>
+				<label for="jform_option-<?php echo $options[0]->option_key; ?>" class="control-label"><?php echo ucfirst($options[0]->option_key); ?></label>
 				<div class="controls">
-					<select name="jform[options[]]" class="product-option" id="option-<?php echo $options[0]->option_key; ?>">
+					<select name="jform[options][<?php echo $options[0]->option_key; ?>]" class="product-option" id="jform_option-<?php echo $options[0]->option_key; ?>">
 						<?php foreach($options as $option){ ?>
 						<option data-price="<?php echo $option->option_price; ?>" data-sku="<?php echo $option->option_sku; ?>" value="<?php echo $option->option_id; ?>"><?php echo $option->option_value; ?></option>
 						<?php } ?>
@@ -144,11 +145,11 @@
 			<div class="control-group">
 				<label for="jform_product_sku"><?php echo JText::_('COM_SHOP_PRODUCT_SKU_LABEL'); ?></label>
 				<div class="controls">
-					<input type="text" name="jform[product_sku]" id="jform_product_sku" disabled value="<?php echo $this->data->product_sku.implode('',$default_sku); ?>" />
+					<input type="text" name="jform[product_sku]" id="jform_product_sku" readonly value="<?php echo $this->data->product_sku.implode('',$default_sku); ?>" />
 				</div>
 			</div>
 			<div class="btn-group">
-				<button type="button" class="btn btn-primary"><?php echo JText::_('COM_SHOP_BUTTON_ADD_TO_CART'); ?></button>
+				<input type="submit" class="btn btn-primary"  value="<?php echo JText::_('COM_SHOP_BUTTON_ADD_TO_CART'); ?>">
 				<button type="button" class="btn btn-primary" id="product-price">$<?php echo number_format($this->data->product_price + $default_price, 2); ?></button>
 			</div>
 		</form>
