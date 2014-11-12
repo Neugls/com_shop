@@ -39,7 +39,8 @@ CREATE TABLE `#__shop_cart_items` (
 	`item_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`item_quantity` MEDIUMINT(6) UNSIGNED NOT NULL DEFAULT 0,
 	`item_sku` VARCHAR(40) DEFAULT NULL,
-	`item_price` DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+	`item_price` DECIMAL(8,2) UNSIGNED NOT NULL DEFAULT 0.00,
+	`item_weight` DECIMAL(8,2) SIGNED DEFAULT 0.00,
 	`product_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
 	`cart_id` INT(11) UNSIGNED DEFAULT NULL,
 	KEY `product_idx` (`product_id`),
@@ -77,12 +78,19 @@ CREATE TABLE `#__shop_images` (
 	PRIMARY KEY (`image_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `#__shop_item_options`;
+CREATE TABLE `#__shop_item_options` (
+    `item_id` INT(11) UNSIGNED DEFAULT NULL,
+    `option_id` INT(11) UNSIGNED DEFAULT NULL,
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `#__shop_options`;
 CREATE TABLE `#__shop_options` (
 	`option_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`option_key` VARCHAR(32) DEFAULT NULL,
 	`option_value` VARCHAR(32) DEFAULT NULL,
 	`option_price` DECIMAL(8,2) SIGNED DEFAULT 0.00,
+	`option_weight` DECIMAL(8,2) SIGNED DEFAULT 0.00,
 	`option_sku` VARCHAR(8) DEFAULT NULL,
 	`product_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
 	KEY `product_idx` (`product_id`),
