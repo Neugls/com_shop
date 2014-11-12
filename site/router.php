@@ -35,7 +35,7 @@ function ShopParseRoute($segments){
 	$query	= array();
 	$query['view'] = $segments[0];
 	$query['layout'] = $segments[1];
-	if($segments[2]){
+	if(isset($segments[2])){
 		$parts = explode(":", $segments[2]);
 		$query['id'] = array_shift($parts);
 	}
