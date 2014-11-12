@@ -12,6 +12,8 @@ class TableOptions extends JTable
 	var $option_value		= null;
 	/** @var float Option Price */
 	var $option_price		= null;
+	/** @var float Option Price */
+	var $option_weight		= null;
 	/** @var string Unique Product Identifier */
 	var $option_sku			= null;
 	/** @var int Product ID */

@@ -16,6 +16,8 @@ class TableProducts extends JTable
 	var $product_description	= null;
 	/** @var float Product Price */
 	var $product_price			= null;
+	/** @var float Product Weight */
+	var $product_weight			= null;
 	/** @var string Meta Keywords */
 	var $meta_keywords			= null;
 	/** @var string Meta Description */
