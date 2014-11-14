@@ -185,6 +185,72 @@ class ShopModelCart extends JModelLegacy
 	/**
 	 * Method to get an array of data items.
 	 *
+	 * @return  mixed  Int cart_id on success, boolean false on failure.
+	 *
+	 * @since   1.0
+	 */
+	public function getPayPalData()
+	{
+		$paypal = array(
+			'custom' => 'uint',
+			'payer_id' => 'cmd',
+			'payer_email' => 'string',
+			'payer_status' => 'string',
+			'tax' => 'float',
+			'first_name' => 'string',
+			'last_name' => 'string',
+			'address_name' => 'string',
+			'address_street' => 'string',
+			'address_city' => 'string',
+			'address_state' => 'cmd',
+			'address_zip' => 'cmd',
+			'mc_shipping' => 'float',
+			'mc_handling' => 'float',
+			'payment_fee' => 'float',
+			'payment_gross' => 'float',
+			'payment_status' => 'string',
+			'txn_id' => 'cmd'
+		);
+		$app = JFactory::getApplication();
+		$data = $app->input->getArray($paypal);
+		$db = $this->getDbo();
+		$sql = $db->getQuery(true);
+		$cart = $this->getTable();
+		$customer = $this->getTable('Customers');
+		$utc = new DateTimeZone("UTC");
+		$now = new DateTime( "now", $utc );
+		// LOAD THE CART
+		if($cart->cart_id != $data['custom']) $cart->load($data['custom']);
+		// FIND THE CUSTOMER
+		$sql->select("`customer_id`");
+		$sql->from("`#__shop_customers`");
+		$sql->where("`customer_email` = ".$db->quote($data['payer_email']));
+		$db->setQuery($sql);
+		if(!$customer_id = $db->loadResult()){
+			// IF CUSTOMER NOT FOUND CREATE ONE
+			$customer->save(array(
+				'customer_first' => $data['first_name'],
+				'customer_last' => $data['last_name'],
+				'customer_session' => $cart->cart_session,
+				'customer_email' => $data['payer_email']
+			));
+			$customer_id = $customer->customer_id;
+		}else{
+			$customer->load($customer_id);
+		}
+		$cart->customer_id = $customer_id;
+		$cart->cart_status = 1;
+		$cart->cart_checkout = $now->format("Y-m-d H:i:s");
+		$cart->cart_tax = $data['tax'];
+		$cart->cart_shipping = $data['mc_shipping'] + $data['mc_handling'];
+		$cart->store();
+		
+		return $cart->cart_id;
+	}
+
+	/**
+	 * Method to get an array of data items.
+	 *
 	 * @return  bool  True on success, false on failure.
 	 *
 	 * @since   1.0

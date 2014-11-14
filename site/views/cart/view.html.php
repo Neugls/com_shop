@@ -14,8 +14,18 @@ class ShopViewCart extends JViewLegacy
 {
 	function display($tpl = null)
 	{
-	    $this->items = $this->get('List');
-	    $this->cart = $this->get('Data');
+		$layout = $this->getLayout();
+		switch($layout){
+		case "receipt":
+			break;
+		case "complete":
+			$this->order_id = $this->get('PayPalData');
+			break;
+		default:
+	    	$this->items = $this->get('List');
+	    	$this->cart = $this->get('Data');
+	    	break;
+	    }
 		parent::display($tpl);
 	}
 }

@@ -1,13 +1,13 @@
 <?php
-	// NO DIRECT ACCESS
-	defined('_JEXEC') or die('Restricted access');
-	// SET DOCUMENT HEAD FOR PAGE
-	$doc = JFactory::getDocument();
-	$doc->addStyleDeclaration(".qty-group span.qty { padding: 0 5px;font-size:12px;font-weight: bold; }");
-	$params = JComponentHelper::getParams('com_shop');
-	$subtotal = 0.00;
-	$i = 0;
-	$base = JURI::base();
+// NO DIRECT ACCESS
+defined('_JEXEC') or die('Restricted access');
+// SET DOCUMENT HEAD FOR PAGE
+$doc = JFactory::getDocument();
+$doc->addStyleDeclaration(".qty-group span.qty { padding: 0 5px;font-size:12px;font-weight: bold; }");
+$options = JComponentHelper::getParams('com_shop');
+$subtotal = 0.00;
+$i = 0;
+$base = substr(JURI::base(), 0, -1);
 ?>
 
 <div>
@@ -45,27 +45,38 @@
         </tr>
     </tbody>
 </table>
-<form name="paypalcart" action="https://www.paypal.com/cgi-bin/webscr" method="POST">
+<?php if(count($this->items)){ ?>
+<form name="paypalcart" action="https://www.<?php echo $options->get('sandbox') ? 'sandbox.' : ''; ?>paypal.com/cgi-bin/webscr" method="POST">
     <input type="hidden" name="cmd" value="_cart" />
     <input type="hidden" name="upload" value="1" />
-	<input type="hidden" name="business" value="" />
+	<input type="hidden" name="business" value="<?php echo $options->get('business'); ?>" />
     <input type="hidden" name="currency_code" value="USD" />
     <input type="hidden" name="weight_unit" value="lbs" />
+	<input type="hidden" name="custom" value="<?php echo $this->cart->cart_id; ?>" />
+	<input type="hidden" name="cancel_return" value="<?php echo $base.JRoute::_('index.php?option=com_shop&view=cart&layout=default'); ?>" />
+	<input type="hidden" name="return" value="<?php echo $base.JRoute::_('index.php?option=com_shop&view=cart&layout=complete'); ?>" />
+	<input type="hidden" name="rm" value="2" />
+	<input type="hidden" name="cbt" value="IMPORTANT!! PLEASE CLICK HERE TO COMPLETE THE TRANSACTION!!" />
     <?php foreach($this->items as $row){ ?>
     <?php $params = json_decode($row->params); ?>
     <input type="hidden" name="item_name_<?php echo $i + 1; ?>" value="<?php echo $row->product_name; ?>" />
-    <input type="hidden" name="item_number_<?php echo $i + 1; ?>" value="<? echo $row->item_sku; ?>" />
-    <input type="hidden" name="weight_<?php echo $i + 1; ?>" value="<? echo $row->item_weight; ?>" />
-    <input type="hidden" name="quantity_<?php echo $i + 1; ?>" value="<? echo $row->item_quantity;; ?>" />
-    <input type="hidden" name="amount_<?php echo $i + 1; ?>" value="<? echo $row->item_price; ?>" />
-    <?php if($params->get('tax_exempt', 0, 'int')){ ?>
-    <input type="hidden" name="tax<?php echo $i + 1; ?>" value="0.00" />
+    <input type="hidden" name="item_number_<?php echo $i + 1; ?>" value="<?php echo $row->item_sku; ?>" />
+    <input type="hidden" name="weight_<?php echo $i + 1; ?>" value="<?php echo $row->item_weight; ?>" />
+    <input type="hidden" name="quantity_<?php echo $i + 1; ?>" value="<?php echo $row->item_quantity;; ?>" />
+    <input type="hidden" name="amount_<?php echo $i + 1; ?>" value="<?php echo $row->item_price; ?>" />
+    <?php if($params->tax_exempt){ ?>
+    <input type="hidden" name="tax_<?php echo $i + 1; ?>" value="0.00" />
     <?php } ?>
     <?php $i++; ?>
     <?php } ?>
     <p>
-        <a href="" class="btn btn-success pull-right"><?php echo JText::_('COM_SHOP_BUTTON_CHECKOUT'); ?> <i class="icon icon-credit"></i></a>
+        <button type="input" class="btn btn-success pull-right"><?php echo JText::_('COM_SHOP_BUTTON_CHECKOUT'); ?> <i class="icon icon-credit"></i></button>
         <a href="<?php echo JRoute::_('index.php?option=com_shop&view=products&layout=default'); ?>" class="btn btn-primary"><?php echo JText::_('COM_SHOP_BUTTON_CONTINUE_SHOPPING'); ?> <i class="icon icon-basket"></i></a>
     </p>
 </form>
+<?php }else{ ?>
+    <p>
+        <a href="<?php echo JRoute::_('index.php?option=com_shop&view=products&layout=default'); ?>" class="btn btn-primary"><?php echo JText::_('COM_SHOP_BUTTON_CONTINUE_SHOPPING'); ?> <i class="icon icon-basket"></i></a>
+    </p>
+<?php } ?>
 </div>
