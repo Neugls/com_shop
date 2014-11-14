@@ -27,16 +27,11 @@
 				});
 				Joomla.submitbutton = function (sometask){
 					var someForm = document.forms.adminForm;
-					var re_blank = /^(\W*)$/;
-					if(sometask != 'shop.cancel'){
-						if(re_blank.test($('#jform_shop_alias').val())){
-							$('#jform_shop_alias').val($('#jform_shop_name').val().replace(/\W/g, '-').toLowerCase());
-						}
+					if(sometask != 'carts.cancel'){
 						if(!document.formvalidator.isValid(someForm)){
 							return false;
 						}
 					}
-					<?php echo $this->form->getField('shop_description')->save(); ?>
 					someForm.task.value = sometask;
 					someForm.submit();
 				}

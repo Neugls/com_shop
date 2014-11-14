@@ -60,7 +60,7 @@ class ShopModelCarts extends JModelAdmin
     public function getData()
     {
 		$id 	= $this->_getCid();
-		$row 	= $this->getTable();
+		$row 	= $this->getTable('Cart');
 
 		$row->load($id);
 		$this->_data = $row;
@@ -98,7 +98,7 @@ class ShopModelCarts extends JModelAdmin
 	{
 		$db		= $this->getDbo();
 		$query 	= $db->getQuery(true);
-		$row 	= $this->getTable();
+		$row 	= $this->getTable('Cart');
 		$id 	= $this->_getCid();
 		
 		$query->select("*");
@@ -125,7 +125,7 @@ class ShopModelCarts extends JModelAdmin
     	$mainframe	= JFactory::getApplication();
 		$option		= $mainframe->input->get('option', 'com_shop');
     	$scope		= $this->getName();
-    	$row		= $this->getTable();
+    	$row		= $this->getTable('Cart');
     	$sql		= $this->_db->getQuery(true);
     	$filter		= array();
     	if($search = addslashes($mainframe->getUserState($option.'.'.$scope.'.filter_search'))){
@@ -141,6 +141,7 @@ class ShopModelCarts extends JModelAdmin
     	$sql->select("CONCAT_WS(' ', `customer_first`, `customer_last`) AS `customer_name`");
     	$sql->from("`{$row->getTableName()}` o");
     	$sql->join("left", "`#__shop_customers` c USING(`customer_id`)");
+    	$sql->where("`cart_status` = 1");
 		foreach($filter as $condition){
 			$sql->where($condition);
 		}
@@ -149,6 +150,61 @@ class ShopModelCarts extends JModelAdmin
 
     	return $this->_data;
     }
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 *
+	 * @since   12.2
+	 * @throws  Exception
+	 */
+	public function getTable($name = '', $prefix = 'Table', $options = array())
+	{
+		if(empty($name)) $name = 'Cart';
+		return parent::getTable($name , $prefix, $options);
+	}
+
+	/**
+	 * Method to delete one or more records.
+	 *
+	 * @param   array  &$pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 *
+	 * @since   1.0
+	 */
+	public function delete(&$pks)
+	{
+		$db = $this->getDbo();
+		$sql = $db->getQuery(true);
+		$ids = implode(',', $pks);
+		$sql->select("`item_id`");
+		$sql->from("`#__shop_cart_items`");
+		$sql->where("`cart_id` IN ({$ids})");
+		$db->setQuery($sql);
+		$keys = $db->loadColumn();
+		$status = parent::delete($pks);
+		if($status){
+			$clause = "`item_id` IN (".implode(',',$keys).")";
+			$sql->clear();
+			$sql->delete("`#__shop_cart_items`");
+			$sql->where($clause);
+			$db->setQuery($sql);
+			$db->execute();
+			$sql->clear();
+			$sql->delete("`#__shop_item_options`");
+			$sql->where($clause);
+			$db->setQuery($sql);
+			$db->execute();
+		}
+		return $status;
+	}
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -198,7 +254,7 @@ class ShopModelCarts extends JModelAdmin
 	 * @since	1.0
 	 */
 	protected function _getCid(){
-		$row = $this->getTable();
+		$row = $this->getTable('Cart');
 		return JFactory::getApplication()->input->get($row->getKeyName(), 0, 'int');
 	}
 }

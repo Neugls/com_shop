@@ -5,17 +5,9 @@
 	$user = JFactory::getUser();
 	$user_id = $user->get('id');
 	$sortFields = array();
-	$sortFields['shop_name'] = JText::_('COM_SHOP_LIST_SHOP_NAME_LABEL');
-	$sortFields['published'] = JText::_('COM_SHOP_LIST_PUBLISHED_LABEL');
-	$sortFields['ordering'] = JText::_('COM_SHOP_LIST_ORDERING_LABEL');
-	$sortFields['s.access'] = JText::_('COM_SHOP_LIST_ACCESS_LABEL');
-	$sortFields['shop_id'] = JText::_('COM_SHOP_LIST_ID_LABEL');
-	$saveOrder = $this->filter->filter_order == 'ordering';
-	if ($saveOrder)
-	{
-		$saveOrderingUrl = 'index.php?option=com_shop&task=shop.saveOrderAjax&tmpl=component';
-		JHtml::_('sortablelist.sortable', 'data-table', 'adminForm', strtolower($this->filter->filter_order_Dir), $saveOrderingUrl);
-	}
+	$sortFields['customer_name'] = JText::_('COM_SHOP_LIST_CUSTOMER_NAME_LABEL');
+	$sortFields['cart_status'] = JText::_('COM_SHOP_LIST_CART_STATUS_LABEL');
+	$sortFields['cart_checkout'] = JText::_('COM_SHOP_LIST_CART_CHECKOUT_LABEL');
 ?>
 <script type="text/javascript">
 //<![CDATA[
@@ -75,23 +67,17 @@
 	<table class="table table-striped" id="data-table">
 		<thead>
 			<tr>
-				<th width="1%" class="nowrap center hidden-phone">
-					<?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'ordering', $this->filter->filter_order_Dir, $this->filter->filter_order, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
-				</th>
-				<th width="5">
+				<th width="5%">
 					<input type="checkbox" name="toggle" value="" onclick="Joomla.checkAll(this)" />
 				</th>
-				<th width="5%" class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_PUBLISHED_LABEL', 'published', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
-				</th>
-				<th class="title" class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_SHOP_NAME_LABEL', 'shop_name', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
-				</th>
-				<th class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_ACCESS_LABEL', 's.access', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
+				<th class="title nowrap">
+					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_CUSTOMER_NAME_LABEL', 'customer_name', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
 				</th>
 				<th>
-					<?php echo JText::_('COM_SHOP_LIST_DESCRIPTION_LABEL'); ?>
+					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_CART_STATUS_LABEL', 'cart_status', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
+				</th>
+				<th>
+					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_CART_CHECKOUT_LABEL', 'cart_checkout', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
 				</th>
 				<th width="1%">
 					<?php echo JHtml::_('grid.sort', 'COM_SHOP_LIST_ID_LABEL', 'shop_id', $this->filter->filter_order_Dir, $this->filter->filter_order, 'shop.filter'); ?>
@@ -103,8 +89,8 @@
 		$k = 0;
 		for($i=0; $i < count($this->items); $i++){
 			$row		= $this->items[$i];
-			$checked	= JHtml::_('grid.id', $i, $row->shop_id);
-			$link		= JRoute::_('index.php?option=com_shop&task=shop.edit&shop_id='. $row->shop_id.'&'.JSession::getFormToken().'=1');
+			$checked	= JHtml::_('grid.id', $i, $row->cart_id);
+			$link		= JRoute::_('index.php?option=com_shop&task=carts.edit&shop_id='. $row->cart_id.'&'.JSession::getFormToken().'=1');
 			$canCreate  = $user->authorise('core.create',     'com_shop');
 			$canEdit    = $user->authorise('core.edit',       'com_shop');
 			$canCheckin = $user->authorise('core.manage',     'com_checkin') || $row->checked_out == $user_id || $row->checked_out == 0;
@@ -112,53 +98,31 @@
 			$canChange  = $user->authorise('core.edit.state', 'com_shop') && $canCheckin;
 			?>
 			<tr class="row<?php echo $k; ?>" sortable-group-id="">
-				<td class="order nowrap center hidden-phone">
-					<?php
-					$iconClass = '';
-					if (!$canChange)
-					{
-						$iconClass = ' inactive';
-					}
-					elseif (!$this->filter->filter_order)
-					{
-						$iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
-					}
-					?>
-					<span class="sortable-handler<?php echo $iconClass ?>">
-						<i class="icon-menu"></i>
-					</span>
-					<?php if ($canChange && $saveOrder) : ?>
-						<input type="text" style="display:none" name="order[]" size="5" value="<?php echo $row->ordering;?>" class="width-20 text-area-order " />
-					<?php endif; ?>
-				</td>
 				<td align="center">
 					<?php echo $checked; ?>
-				</td>
-				<td align="center">
-					<?php echo JHtml::_('jgrid.published', $row->published, $i, 'shop.', $canChange, 'cb'); ?>
 				</td>
 				<td  class="nowrap">
 					<?php
 					if($row->checked_out){
 						echo JHtml::_('jgrid.checkedout', $i, $row->editor, $row->checked_out_time, 'shop.', $canCheckin);
-						echo "<span class=\"title\">".JText::_( $row->shop_name)."</span>";
+						echo "<span class=\"title\">".JText::_( $row->customer_name)."</span>";
 					}else{
 						if($canEdit || $canEditOwn){
-							echo "<a href=\"{$link}\">" . htmlspecialchars($row->shop_name, ENT_QUOTES) . "</a>";
+							echo "<a href=\"{$link}\">" . htmlspecialchars($row->customer_name, ENT_QUOTES) . "</a>";
 						}else{
-							echo "<span class=\"title\">".JText::_( $row->shop_name)."</span>";
+							echo "<span class=\"title\">".JText::_( $row->customer_name)."</span>";
 						}
 					}
 					?>
 				</td>
 				<td align="center">
-					<?php echo $row->access; ?>
+					<?php echo $row->cart_status; ?>
 				</td>
 				<td>
-					<?php $words = explode(" ", strip_tags($row->shop_description)); echo implode(" ", array_splice($words, 0, 55)); ?>
+					<?php echo $row->cart_checkout; ?>
 				</td>
 				<td>
-					<?php echo $row->shop_id; ?>
+					<?php echo $row->cart_id; ?>
 				</td>
 			</tr>
 			<?php
