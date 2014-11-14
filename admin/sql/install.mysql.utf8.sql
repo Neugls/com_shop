@@ -82,6 +82,8 @@ DROP TABLE IF EXISTS `#__shop_item_options`;
 CREATE TABLE `#__shop_item_options` (
     `item_id` INT(11) UNSIGNED DEFAULT NULL,
     `option_id` INT(11) UNSIGNED DEFAULT NULL,
+    KEY `item_idx` (`item_id`),
+    KEY `option_idx` (`option_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#__shop_options`;
