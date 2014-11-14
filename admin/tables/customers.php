@@ -12,6 +12,8 @@ class TableCustomers extends JTable
 	var $customer_last		= null;
 	/** @var string Session ID */
 	var $customer_session	= null;
+	/** @var string Customer Email */
+	var $customer_email		= null;
 	/** @var int */
 	var $checked_out		= null;
 	/** @var time */
@@ -45,6 +47,14 @@ class TableCustomers extends JTable
 	}
 	
 	public function store($updateNulls = false){
+		$date = JDate::getInstance('now', 'UTC');
+		$user = JFactory::getUser();
+		if(!$this->customer_id){
+			$this->created = $date->toSql(true);
+			$this->created_by = $user->get('id');
+		}
+		$this->modified = $date->toSql(true);
+		$this->modified_by = $user->get('id');
 		if(!parent::store($updateNulls)){
 			return false;
 		}
