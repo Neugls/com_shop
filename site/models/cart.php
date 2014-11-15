@@ -183,6 +183,49 @@ class ShopModelCart extends JModelLegacy
     }
 
 	/**
+	 * Method to get a single record.
+	 *
+	 * @return  mixed    Object on success, false on failure.
+	 *
+	 * @since   1.0
+	 */
+    public function getOrderData()
+    {
+    	$app = JFactory::getApplication();
+    	$id = $app->input->get('id', 0, 'uint');
+    	$cart = $this->getTable();
+    	$cart->load($id);
+    	$data = $cart->getProperties();
+    	$obj = JArrayHelper::toObject($data);
+    	return $obj;
+    }
+
+	/**
+	 * Method to get an array of data items from a specified cart.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 *
+	 * @since   1.0
+	 */
+    public function getOrderItems()
+    {
+    	$app	= JFactory::getApplication();
+    	$id		= $app->input->get('id', 0, 'uint');
+    	$sql	= $this->_db->getQuery(true);
+    	
+    	$sql->select("i.*, p.`product_name`, p.`params`");
+    	$sql->select("CONCAT_WS(':', p.product_id, p.product_alias) AS product_slug");
+    	$sql->select("(`item_quantity` * `item_price`) AS `line_price`");
+    	$sql->from("`#__shop_cart_items` i");
+    	$sql->join("left", "`#__shop_products` p USING(`product_id`)");
+    	$sql->where("`cart_id` = {$id}");
+		$this->_db->setQuery($sql);
+		$this->_data = $this->_db->loadObjectList();
+		
+		return $this->_data;
+    }
+
+	/**
 	 * Method to get an array of data items.
 	 *
 	 * @return  mixed  Int cart_id on success, boolean false on failure.
@@ -241,6 +284,7 @@ class ShopModelCart extends JModelLegacy
 		$cart->customer_id = $customer_id;
 		$cart->cart_status = 1;
 		$cart->cart_checkout = $now->format("Y-m-d H:i:s");
+		$cart->cart_total = $data['payment_gross'];
 		$cart->cart_tax = $data['tax'];
 		$cart->cart_shipping = $data['mc_shipping'] + $data['mc_handling'];
 		$cart->store();
@@ -279,6 +323,17 @@ class ShopModelCart extends JModelLegacy
 		$sql->where("i.`cart_id` = {$cart->cart_id}");
 		
 		$db->setQuery($sql);
-		return $db->execute();
+		$db->execute();
+		// UPDATE THE CART SUBTOTAL
+		$sql->clear();
+		$sql->select("SUM(`item_quantity` * `item_price`)");
+		$sql->from("`#__shop_cart_items`");
+		$sql->where("`cart_id` = {$cart->cart_id}");
+		$db->setQuery($sql);
+		$subtotal = $db->loadResult();
+		$cart->cart_subtotal = $subtotal;
+		$cart->store();
+		
+		return true;
 	}
 }
