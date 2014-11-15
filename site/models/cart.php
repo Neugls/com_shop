@@ -62,14 +62,17 @@ class ShopModelCart extends JModelLegacy
 		    $db->setQuery($sql);
 		    $db->execute();
 		    $item_id = $db->insertid();
-		    $sql->clear();
-		    $sql->insert($db->quoteName('#__shop_item_options'));
-		    $sql->columns("`item_id`, `option_id`");
-		    foreach($data['options'] as $key => $value){
-		        if( $value ) $sql->values($item_id.",".$value);
+			if(count($data['options'])){
+				// ADD OPTIONS IF APPROPRIATE
+				$sql->clear();
+				$sql->insert($db->quoteName('#__shop_item_options'));
+				$sql->columns("`item_id`, `option_id`");
+				foreach($data['options'] as $key => $value){
+					if( $value ) $sql->values($item_id.",".$value);
+				}
+				$db->setQuery($sql);
+				$db->execute();
 		    }
-		    $db->setQuery($sql);
-		    $db->execute();
 		}
 		// UPDATE PRODUCT PRICING AND WEIGHT ON ALL CART ITEMS
 		$this->updateCart();
